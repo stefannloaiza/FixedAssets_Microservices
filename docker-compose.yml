@@ -1,0 +1,76 @@
+version: '3.8'
+services:
+  ### Postgres database for Assets
+  db-assets:
+    container_name: db-assets
+    image: postgres:16.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fixed_assets
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: stefannloaiza
+    ports:
+      - "5431:5431"
+    expose:
+      - 5431
+    command: -p 5431
+
+  ### Postgres database for Assignment
+  db-assignment:
+    container_name: db-assignment
+    image: postgres:16.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fixed_assets
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: stefannloaiza
+    ports:
+      - "5434:5434"
+    expose:
+      - 5434
+    command: -p 5434
+
+  ### Postgres database for Depreciation
+  db-depreciation:
+    container_name: db-depreciation
+    image: postgres:16.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fixed_assets
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: stefannloaiza
+    ports:
+      - "5435:5435"
+    expose:
+      - 5435
+    command: -p 5435
+
+  ### Postgres database for maintenance
+  db-maintenance:
+    container_name: db-maintenance
+    image: postgres:16.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fixed_assets
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: stefannloaiza
+    ports:
+      - "5436:5436"
+    expose:
+      - 5436
+    command: -p 5436
+
+  ### Postgres database for news
+  db-news:
+    container_name: db-news
+    image: postgres:16.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fixed_assets
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: stefannloaiza
+    ports:
+      - "5437:5437"
+    expose:
+      - 5437
+    command: -p 5437
