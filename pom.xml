@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.perficient</groupId>
+    <groupId>com.perficient.fixedassets</groupId>
     <artifactId>fixed-assets</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
@@ -28,12 +28,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>fixed-assets-common</module>
         <module>assets-microservice</module>
         <module>assignment-microservice</module>
         <module>depreciation-microservice</module>
         <module>maintenance-microservice</module>
         <module>news-microservice</module>
+        <module>users-microservice</module>
     </modules>
 
     <dependencies>
