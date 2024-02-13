@@ -1,0 +1,15 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: users-msvc
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5431/fixed_assets
+    username: postgres
+    password: stefannloaiza
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
