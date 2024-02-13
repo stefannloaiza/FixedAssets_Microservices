@@ -74,3 +74,18 @@ services:
     expose:
       - 5437
     command: -p 5437
+
+  ### Postgres database for Users
+  db-users:
+    container_name: db-users
+    image: postgres:16.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fixed_assets
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: stefannloaiza
+    ports:
+      - "5438:5438"
+    expose:
+      - 5438
+    command: -p 5438

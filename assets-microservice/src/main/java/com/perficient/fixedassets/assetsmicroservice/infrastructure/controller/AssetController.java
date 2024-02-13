@@ -49,10 +49,8 @@ public class AssetController {
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> updateAsset(@PathVariable Long id, @RequestBody AssetDTO assetDTO) {
-        if (Boolean.TRUE.equals(assetUseCase.updateAsset(id, assetDTO))) {
-            return ResponseEntity.ok("Asset updated successfully");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return Boolean.TRUE.equals(assetUseCase.updateAsset(id, assetDTO)) ?
+                ResponseEntity.ok("Asset updated successfully") :
+                ResponseEntity.notFound().build();
     }
 }
