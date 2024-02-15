@@ -1,5 +1,6 @@
 version: '3.8'
 services:
+
   ### Postgres database for Assets
   db-assets:
     container_name: db-assets
@@ -20,6 +21,9 @@ services:
     container_name: db-assignment
     image: postgres:16.1
     restart: unless-stopped
+    depends_on:
+      - db-assets
+      - db-users
     environment:
       POSTGRES_DB: fixed_assets
       POSTGRES_USER: postgres

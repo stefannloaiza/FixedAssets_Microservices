@@ -33,19 +33,13 @@ public class Asset {
 
     @Enumerated(value = EnumType.STRING)
     private Status status;
-
     private LocalDate acquisitionDate;
     private Double acquisitionCost;
+    private Boolean assignmentStatus;
 
     @Override
     public String toString() {
-        return "Asset{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                ", acquisitionDate=" + acquisitionDate +
-                ", acquisitionCost=" + acquisitionCost +
-                '}';
+        return "Asset {id=%d, name='%s', description='%s', status=%s, acquisitionDate=%s, acquisitionCost=%s, assignmentStatus=%s}"
+                .formatted(id, name, description, status, acquisitionDate, acquisitionCost, assignmentStatus);
     }
 }
