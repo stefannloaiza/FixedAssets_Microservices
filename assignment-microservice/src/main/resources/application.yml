@@ -1,12 +1,12 @@
 server:
-  port: 8081
+  port: 8083
 
 spring:
   application:
-    name: users-msvc
+    name: assignment-msvc
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5438/fixed_assets
+    url: jdbc:postgresql://localhost:5434/fixed_assets
     username: postgres
     password: stefannloaiza
   jpa:
