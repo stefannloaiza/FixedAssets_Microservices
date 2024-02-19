@@ -39,6 +39,8 @@ services:
     container_name: db-depreciation
     image: postgres:16.1
     restart: unless-stopped
+    depends_on:
+      - db-assets
     environment:
       POSTGRES_DB: fixed_assets
       POSTGRES_USER: postgres

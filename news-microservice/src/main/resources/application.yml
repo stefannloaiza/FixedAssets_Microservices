@@ -1,0 +1,15 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: news-msvc
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5437/fixed_assets
+    username: postgres
+    password: stefannloaiza
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
