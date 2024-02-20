@@ -9,6 +9,8 @@ spring:
       discovery:
         locator:
           enabled: true
+      swagger:
+        enabled: true
       routes:
         - id: assets-msvc
           uri: lb://assets-msvc
