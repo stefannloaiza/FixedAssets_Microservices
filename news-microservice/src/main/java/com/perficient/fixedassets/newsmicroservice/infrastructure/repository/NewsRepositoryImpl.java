@@ -4,9 +4,11 @@ import com.perficient.fixedassets.newsmicroservice.domain.entity.News;
 import com.perficient.fixedassets.newsmicroservice.domain.repository.NewsRepository;
 import com.perficient.fixedassets.newsmicroservice.infrastructure.jpa.NewsJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+@Service
 @RequiredArgsConstructor
 public class NewsRepositoryImpl implements NewsRepository {
 

@@ -4,9 +4,11 @@ import com.perficient.fixedassets.maintenancemicroservice.domain.entity.Maintena
 import com.perficient.fixedassets.maintenancemicroservice.domain.repository.MaintenanceRepository;
 import com.perficient.fixedassets.maintenancemicroservice.infrastructure.jpa.MaintenanceJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+@Service
 @RequiredArgsConstructor
 public class MaintenanceRepositoryImpl implements MaintenanceRepository {
 
