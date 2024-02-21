@@ -1,6 +1,8 @@
 package com.perficient.fixedassets.assetsmicroservice.application.usecase;
 
 import com.perficient.fixedassets.assetsmicroservice.domain.models.dto.AssetDTO;
+import com.perficient.fixedassets.assetsmicroservice.domain.models.response.AssetResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface AssetUseCase {
 
@@ -10,7 +12,7 @@ public interface AssetUseCase {
 
     Iterable<AssetDTO> getAssetsByStatus(String status);
 
-    void createAsset(AssetDTO assetDTO);
+    ResponseEntity<AssetResponse> createAsset(AssetDTO assetDTO);
 
-    Boolean updateAsset(Long id, AssetDTO assetDTO);
+    ResponseEntity<AssetResponse> updateAsset(Long id, AssetDTO assetDTO);
 }

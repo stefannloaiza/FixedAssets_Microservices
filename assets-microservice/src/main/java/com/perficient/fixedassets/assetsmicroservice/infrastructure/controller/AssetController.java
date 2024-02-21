@@ -2,6 +2,7 @@ package com.perficient.fixedassets.assetsmicroservice.infrastructure.controller;
 
 import com.perficient.fixedassets.assetsmicroservice.application.usecase.AssetUseCase;
 import com.perficient.fixedassets.assetsmicroservice.domain.models.dto.AssetDTO;
+import com.perficient.fixedassets.assetsmicroservice.domain.models.response.AssetResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,16 +42,13 @@ public class AssetController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> createAsset(@RequestBody AssetDTO assetDTO) {
-        assetUseCase.createAsset(assetDTO);
-        return ResponseEntity.ok("Asset created successfully");
+    public ResponseEntity<AssetResponse> createAsset(@RequestBody AssetDTO assetDTO) {
+        return assetUseCase.createAsset(assetDTO);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> updateAsset(@PathVariable Long id, @RequestBody AssetDTO assetDTO) {
-        return Boolean.TRUE.equals(assetUseCase.updateAsset(id, assetDTO)) ?
-                ResponseEntity.ok("Asset updated successfully") :
-                ResponseEntity.notFound().build();
+    public ResponseEntity<AssetResponse> updateAsset(@PathVariable Long id, @RequestBody AssetDTO assetDTO) {
+        return assetUseCase.updateAsset(id, assetDTO);
     }
 }
