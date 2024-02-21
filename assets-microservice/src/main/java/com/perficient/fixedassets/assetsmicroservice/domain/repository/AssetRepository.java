@@ -9,9 +9,12 @@ public interface AssetRepository {
 
     Asset findById(Long id);
 
+    Asset findByCode(String code);
+
     Collection<Asset> findAll();
 
     Collection<Asset> findByStatus(String status);
+
 
     void deleteById(Long id);
 }

@@ -25,6 +25,11 @@ public class AssetRepositoryImpl implements AssetRepository {
     }
 
     @Override
+    public Asset findByCode(String code) {
+        return assetJpaRepository.findByCode(code).orElse(null);
+    }
+
+    @Override
     public Collection<Asset> findAll() {
         return assetJpaRepository.findAll();
     }
@@ -33,6 +38,7 @@ public class AssetRepositoryImpl implements AssetRepository {
     public Collection<Asset> findByStatus(String status) {
         return assetJpaRepository.findByStatus(status);
     }
+
 
     @Override
     public void deleteById(Long id) {

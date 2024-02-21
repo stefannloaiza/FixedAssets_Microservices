@@ -25,7 +25,7 @@ public class AssetValidation {
 
         if (Objects.isNull(asset)) {
             errorResponseList.add(new ErrorResponse("Asset not found", HttpStatus.BAD_REQUEST));
-            log.error("Asset not found: {}", asset);
+            log.error("Asset not found: {}", (Object) null);
         }
         if (Objects.isNull(asset.getName()) || asset.getName().isBlank()) {
             errorResponseList.add(new ErrorResponse("Asset name is required", HttpStatus.BAD_REQUEST));
@@ -38,6 +38,18 @@ public class AssetValidation {
         if (Objects.isNull(asset.getStatus())) {
             errorResponseList.add(new ErrorResponse("Asset status is required", HttpStatus.BAD_REQUEST));
             log.error("Asset status is required: {}", asset);
+        }
+        if (Objects.isNull(asset.getAcquisitionDate())) {
+            errorResponseList.add(new ErrorResponse("Asset acquisition date is required", HttpStatus.BAD_REQUEST));
+            log.error("Asset acquisition date is required: {}", asset);
+        }
+        if (Objects.isNull(asset.getAcquisitionCost())) {
+            errorResponseList.add(new ErrorResponse("Asset acquisition cost is required", HttpStatus.BAD_REQUEST));
+            log.error("Asset acquisition cost is required: {}", asset);
+        }
+        if (Objects.isNull(asset.getAssignmentStatus())) {
+            errorResponseList.add(new ErrorResponse("Asset assignment status is required", HttpStatus.BAD_REQUEST));
+            log.error("Asset assignment status is required: {}", asset);
         }
 
         return errorResponseList;
