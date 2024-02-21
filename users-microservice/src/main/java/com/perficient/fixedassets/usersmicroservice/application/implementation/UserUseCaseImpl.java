@@ -1,15 +1,21 @@
 package com.perficient.fixedassets.usersmicroservice.application.implementation;
 
 import com.perficient.fixedassets.usersmicroservice.application.usecase.UserUseCase;
+import com.perficient.fixedassets.usersmicroservice.application.validations.UserValidation;
 import com.perficient.fixedassets.usersmicroservice.domain.entity.User;
 import com.perficient.fixedassets.usersmicroservice.domain.mapper.UserMapper;
 import com.perficient.fixedassets.usersmicroservice.domain.models.dto.UserDTO;
-import com.perficient.fixedassets.usersmicroservice.infrastructure.repository.UserRepository;
+import com.perficient.fixedassets.usersmicroservice.domain.models.response.ErrorResponse;
+import com.perficient.fixedassets.usersmicroservice.domain.models.response.UserResponse;
+import com.perficient.fixedassets.usersmicroservice.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,39 +27,54 @@ public class UserUseCaseImpl implements UserUseCase {
     @Override
     public Iterable<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(UserMapper.INSTANCE::userToUserDTO)
-                .toList();
+                .map(UserMapper.INSTANCE::userToUserDTO).toList();
     }
 
     @Override
     public Iterable<UserDTO> getUsersByActive(boolean active) {
         return userRepository.findByActive(active).stream()
                 .map(UserMapper.INSTANCE::userToUserDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     public UserDTO getUserById(Long id) {
-        return userRepository.findById(id)
-                .map(UserMapper.INSTANCE::userToUserDTO)
-                .orElse(null);
+        return UserMapper.INSTANCE.userToUserDTO(userRepository.findById(id));
     }
 
     @Override
-    public void createUser(UserDTO userDTO) {
-        userRepository.save(UserMapper.INSTANCE.userDTOToUser(userDTO));
-        log.info("User created: {}", userDTO);
+    public ResponseEntity<UserResponse> createUser(UserDTO userDTO) {
+        User user = UserMapper.INSTANCE.userDTOToUser(userDTO);
+
+        List<ErrorResponse> errorResponseList = checkUser(user);
+        if (!errorResponseList.isEmpty()) {
+            return ResponseEntity.badRequest().body(new UserResponse("User not created", errorResponseList));
+        }
+
+        userRepository.save(user);
+        log.info("User created: {}", user);
+        return ResponseEntity.ok(new UserResponse("User created successfully", null));
     }
 
     @Override
-    public Boolean updateUser(Long id, UserDTO userDTO) {
-        User user = userRepository.findById(id).orElse(null);
+    public ResponseEntity<UserResponse> updateUser(Long id, UserDTO userDTO) {
+        User user = userRepository.findById(id);
         if (Objects.isNull(user)) {
             log.error("User not found: {}", id);
-            return false;
+            return ResponseEntity.badRequest().body(new UserResponse("User not found", null));
         }
-        userRepository.save(UserMapper.INSTANCE.updateUserFromUserDTO(userDTO, user));
+        user = UserMapper.INSTANCE.updateUserFromUserDTO(userDTO, user);
+        List<ErrorResponse> errorResponseList = checkUser(user);
+        if (!errorResponseList.isEmpty()) {
+            return ResponseEntity.badRequest().body(new UserResponse("User not updated", errorResponseList));
+        }
+
+        user = userRepository.save(user);
         log.info("User updated: {}", user);
-        return true;
+        return ResponseEntity.ok(new UserResponse("User updated", null));
+    }
+
+    private static List<ErrorResponse> checkUser(User user) {
+        return UserValidation.checkUser(user);
     }
 }
