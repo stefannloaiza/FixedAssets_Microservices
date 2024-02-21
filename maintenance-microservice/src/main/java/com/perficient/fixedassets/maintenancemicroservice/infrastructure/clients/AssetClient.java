@@ -3,10 +3,11 @@ package com.perficient.fixedassets.maintenancemicroservice.infrastructure.client
 import com.perficient.fixedassets.maintenancemicroservice.domain.models.dto.AssetDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "assets-msvc")
+@FeignClient(name = "gateway-msvc")
 public interface AssetClient {
 
-    @GetMapping("/asset/{assetId}")
-    AssetDTO getAssetByAssetId(Long assetId);
+    @GetMapping("/api/v1/assets/{assetId}")
+    AssetDTO getAssetByAssetId(@PathVariable Long assetId);
 }

@@ -33,4 +33,10 @@ public class Maintenance {
     private LocalDate maintenanceDate;
     private String status;
     private LocalDate finalizationDate;
+
+    @Override
+    public String toString() {
+        return "Maintenance{id=%d, assetId=%d, description='%s', maintenanceDate=%s, status='%s', finalizationDate=%s}"
+                .formatted(id, assetId, description, maintenanceDate, status, finalizationDate);
+    }
 }
