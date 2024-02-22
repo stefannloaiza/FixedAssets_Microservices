@@ -1,6 +1,6 @@
 package com.perficient.fixedassets.newsmicroservice.domain.entity;
 
-import jakarta.persistence.Column;
+import com.perficient.fixedassets.newsmicroservice.domain.models.enums.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,16 +26,17 @@ public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private Long assetId;
+    private String userNotifier;
     private LocalDate registrationDate;
     private String title;
     private String description;
+    private Status status;
+    private String userAssigned;
 
     @Override
     public String toString() {
-        return "News{id=%d, assetId=%d, registrationDate=%s, title='%s', description='%s'}"
-                .formatted(id, assetId, registrationDate, title, description);
+        return "News{id=%d, assetId=%d, userNotifier='%s', registrationDate=%s, title='%s', description='%s', status=%s, userAssigned='%s'}"
+                .formatted(id, assetId, userNotifier, registrationDate, title, description, status, userAssigned);
     }
 }

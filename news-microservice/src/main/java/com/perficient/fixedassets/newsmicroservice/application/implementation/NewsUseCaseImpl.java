@@ -1,16 +1,22 @@
 package com.perficient.fixedassets.newsmicroservice.application.implementation;
 
 import com.perficient.fixedassets.newsmicroservice.application.usecase.NewsUseCase;
+import com.perficient.fixedassets.newsmicroservice.application.validations.NewsValidation;
 import com.perficient.fixedassets.newsmicroservice.domain.entity.News;
 import com.perficient.fixedassets.newsmicroservice.domain.mapper.NewsMapper;
 import com.perficient.fixedassets.newsmicroservice.domain.models.dto.NewsDTO;
+import com.perficient.fixedassets.newsmicroservice.domain.models.response.ErrorResponse;
 import com.perficient.fixedassets.newsmicroservice.domain.models.response.NewsReponse;
 import com.perficient.fixedassets.newsmicroservice.domain.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +24,7 @@ import java.util.Collection;
 public class NewsUseCaseImpl implements NewsUseCase {
 
     private final NewsRepository newsRepository;
+    private final KafkaTemplate<String, News> kafkaTemplate;
 
     @Override
     public Collection<NewsDTO> getAll() {
@@ -36,25 +43,31 @@ public class NewsUseCaseImpl implements NewsUseCase {
                 .map(NewsMapper.INSTANCE::newsToNewsDTO).toList();
     }
 
-
     @Override
-    public NewsReponse createNews(NewsDTO newsDTO) {
-        News newsSaved = newsRepository.save(NewsMapper.INSTANCE.newsDTOToNews(newsDTO));
-        log.info("News created: {}", newsSaved);
+    public ResponseEntity<NewsReponse> createNews(NewsDTO newsDTO) {
+        News news = NewsMapper.INSTANCE.newsDTOToNews(newsDTO);
 
-        return new NewsReponse("News created successfully!", null);
+        List<ErrorResponse> errorResponseList = checkNews(news);
+        if (!errorResponseList.isEmpty()) {
+            return ResponseEntity.badRequest().body(new NewsReponse("Failed to create news", HttpStatus.BAD_REQUEST, errorResponseList));
+        }
+
+        news = newsRepository.save(news);
+        log.info("News created: {}", news);
+
+        // generate maintenance for this new
+        sendNewMaintenanceEvent(news);
+
+        return ResponseEntity.ok(new NewsReponse("News created successfully", HttpStatus.CREATED, null));
     }
 
-    @Override
-    public void deleteNewsById(Long id) {
-        newsRepository.deleteById(id);
-        log.info("News deleted: {}", id);
+    private List<ErrorResponse> checkNews(News news) {
+        return NewsValidation.validateNews(news);
     }
 
-    @Override
-    public void generateNewsNotificationEvents() {
-        // use kafka to nofity all users
-        log.info("Generating news notification events...");
-        log.info("News notification events generated.");
+    private void sendNewMaintenanceEvent(News news) {
+        // use kafka to generate new maintenance for the asset.
+        kafkaTemplate.send("maintenance-topic", news);
+        log.info("New maintenance generated for asset: {}", news.getAssetId());
     }
 }

@@ -33,9 +33,4 @@ public class NewsRepositoryImpl implements NewsRepository {
     public Collection<News> getNewsByAssetId(Long assetId) {
         return newsJpaRepository.getNewsByAssetId(assetId);
     }
-
-    @Override
-    public void deleteById(Long id) {
-        newsJpaRepository.deleteById(id);
-    }
 }
