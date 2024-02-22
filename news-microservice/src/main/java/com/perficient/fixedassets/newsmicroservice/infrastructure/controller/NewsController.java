@@ -5,7 +5,7 @@ import com.perficient.fixedassets.newsmicroservice.domain.models.dto.NewsDTO;
 import com.perficient.fixedassets.newsmicroservice.domain.models.response.NewsReponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/v1/news")
@@ -29,8 +31,12 @@ public class NewsController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public NewsDTO getNewsById(@PathVariable Long id) {
-        return newsUseCase.getNewsById(id);
+    public ResponseEntity<NewsDTO> getNewsById(@PathVariable Long id) {
+        NewsDTO news = newsUseCase.getNewsById(id);
+        if (Objects.isNull(news)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(news);
     }
 
     @GetMapping("/asset/{assetId}")
@@ -41,19 +47,7 @@ public class NewsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public NewsReponse createNews(@RequestBody NewsDTO newsDTO) {
+    public ResponseEntity<NewsReponse> createNews(@RequestBody NewsDTO newsDTO) {
         return newsUseCase.createNews(newsDTO);
-    }
-
-    @GetMapping("/notification")
-    @ResponseStatus(HttpStatus.OK)
-    public void generateNewsNotificationEvents() {
-        newsUseCase.generateNewsNotificationEvents();
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteNewsById(@PathVariable Long id) {
-        newsUseCase.deleteNewsById(id);
     }
 }

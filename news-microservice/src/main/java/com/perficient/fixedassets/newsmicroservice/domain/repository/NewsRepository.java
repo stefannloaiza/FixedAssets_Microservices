@@ -13,6 +13,4 @@ public interface NewsRepository {
     News getNewsById(Long id);
 
     Collection<News> getNewsByAssetId(Long assetId);
-
-    void deleteById(Long id);
 }

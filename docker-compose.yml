@@ -75,6 +75,7 @@ services:
     restart: unless-stopped
     depends_on:
       - db-assets
+      - db-users
     environment:
       POSTGRES_DB: fixed_assets
       POSTGRES_USER: postgres
