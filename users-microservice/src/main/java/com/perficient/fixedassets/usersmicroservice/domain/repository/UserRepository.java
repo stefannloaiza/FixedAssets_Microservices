@@ -10,9 +10,12 @@ public interface UserRepository {
 
     User findById(Long id);
 
+    User findByUsername(String username);
+
     Collection<User> findAll();
 
     Collection<User> findByActive(Boolean active);
+
 
     void deleteById(Long id);
 }

@@ -9,5 +9,7 @@ import java.util.Collection;
 @Repository
 public interface UserJpaRepository extends JpaRepository<User, Long> {
     Collection<User> findByActive(Boolean active);
+
+    User findByUsername(String username);
 }
 

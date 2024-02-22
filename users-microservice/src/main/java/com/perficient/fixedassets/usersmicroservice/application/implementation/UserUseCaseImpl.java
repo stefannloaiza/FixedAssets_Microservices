@@ -10,12 +10,12 @@ import com.perficient.fixedassets.usersmicroservice.domain.models.response.UserR
 import com.perficient.fixedassets.usersmicroservice.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,14 +27,15 @@ public class UserUseCaseImpl implements UserUseCase {
     @Override
     public Iterable<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(UserMapper.INSTANCE::userToUserDTO).toList();
+                .map(UserMapper.INSTANCE::userToUserDTO)
+                .toList();
     }
 
     @Override
     public Iterable<UserDTO> getUsersByActive(boolean active) {
         return userRepository.findByActive(active).stream()
                 .map(UserMapper.INSTANCE::userToUserDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -47,6 +48,7 @@ public class UserUseCaseImpl implements UserUseCase {
         User user = UserMapper.INSTANCE.userDTOToUser(userDTO);
 
         List<ErrorResponse> errorResponseList = checkUser(user);
+        checkIfUsernameExists(user, errorResponseList);
         if (!errorResponseList.isEmpty()) {
             return ResponseEntity.badRequest().body(new UserResponse("User not created", errorResponseList));
         }
@@ -76,5 +78,11 @@ public class UserUseCaseImpl implements UserUseCase {
 
     private static List<ErrorResponse> checkUser(User user) {
         return UserValidation.checkUser(user);
+    }
+
+    private void checkIfUsernameExists(User user, List<ErrorResponse> errorResponseList) {
+        if (Objects.nonNull(userRepository.findByUsername(user.getUsername()))) {
+            errorResponseList.add(new ErrorResponse("Username already exists", HttpStatus.BAD_REQUEST));
+        }
     }
 }
