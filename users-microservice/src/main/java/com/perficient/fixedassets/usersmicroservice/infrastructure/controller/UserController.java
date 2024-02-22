@@ -2,6 +2,7 @@ package com.perficient.fixedassets.usersmicroservice.infrastructure.controller;
 
 import com.perficient.fixedassets.usersmicroservice.application.usecase.UserUseCase;
 import com.perficient.fixedassets.usersmicroservice.domain.models.dto.UserDTO;
+import com.perficient.fixedassets.usersmicroservice.domain.models.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,16 +42,13 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
-        userUseCase.createUser(userDTO);
-        return ResponseEntity.ok("User created successfully");
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserDTO userDTO) {
+        return userUseCase.createUser(userDTO);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        return Boolean.TRUE.equals(userUseCase.updateUser(id, userDTO)) ?
-                ResponseEntity.ok("User updated successfully") :
-                ResponseEntity.notFound().build();
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        return userUseCase.updateUser(id, userDTO);
     }
 }

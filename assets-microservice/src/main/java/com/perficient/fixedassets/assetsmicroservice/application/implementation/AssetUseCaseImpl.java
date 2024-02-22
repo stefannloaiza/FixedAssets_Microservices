@@ -25,11 +25,6 @@ public class AssetUseCaseImpl implements AssetUseCase {
     private final AssetRepository assetRepository;
 
     @Override
-    public AssetDTO getAsset(Long id) {
-        return AssetMapper.INSTANCE.assetToAssetDTO(assetRepository.findById(id));
-    }
-
-    @Override
     public Iterable<AssetDTO> getAllAssets() {
         return assetRepository.findAll().stream()
                 .map(AssetMapper.INSTANCE::assetToAssetDTO).toList();
@@ -37,8 +32,13 @@ public class AssetUseCaseImpl implements AssetUseCase {
 
     @Override
     public Iterable<AssetDTO> getAssetsByStatus(String status) {
-        return assetRepository.findByStatus(status)
-                .stream().map(AssetMapper.INSTANCE::assetToAssetDTO).toList();
+        return assetRepository.findByStatus(status).stream()
+                .map(AssetMapper.INSTANCE::assetToAssetDTO).toList();
+    }
+
+    @Override
+    public AssetDTO getAsset(Long id) {
+        return AssetMapper.INSTANCE.assetToAssetDTO(assetRepository.findById(id));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class AssetUseCaseImpl implements AssetUseCase {
             log.error("Asset not found: {}", id);
             return ResponseEntity.badRequest().body(new AssetResponse("Asset not found", null));
         }
-        
+
         Asset updated = AssetMapper.INSTANCE.updateAssetFromAssetDTO(assetDTO, asset);
         List<ErrorResponse> errorsResponseList = checkAsset(updated);
         if (!errorsResponseList.isEmpty()) {
@@ -81,10 +81,9 @@ public class AssetUseCaseImpl implements AssetUseCase {
         return AssetValidation.checkAsset(asset);
     }
 
-    private List<ErrorResponse> checkIfAssetCodeExist(Asset asset, List<ErrorResponse> errorsResponseList) {
+    private void checkIfAssetCodeExist(Asset asset, List<ErrorResponse> errorsResponseList) {
         if (Objects.nonNull(assetRepository.findByCode(asset.getCode()))) {
             errorsResponseList.add(new ErrorResponse("Asset code already exists", HttpStatus.BAD_REQUEST));
         }
-        return errorsResponseList;
     }
 }

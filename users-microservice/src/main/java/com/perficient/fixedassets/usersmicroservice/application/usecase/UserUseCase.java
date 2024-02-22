@@ -1,6 +1,8 @@
 package com.perficient.fixedassets.usersmicroservice.application.usecase;
 
 import com.perficient.fixedassets.usersmicroservice.domain.models.dto.UserDTO;
+import com.perficient.fixedassets.usersmicroservice.domain.models.response.UserResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface UserUseCase {
 
@@ -10,7 +12,7 @@ public interface UserUseCase {
 
     UserDTO getUserById(Long id);
 
-    void createUser(UserDTO userDTO);
+    ResponseEntity<UserResponse> createUser(UserDTO userDTO);
 
-    Boolean updateUser(Long id, UserDTO userDTO);
+    ResponseEntity<UserResponse> updateUser(Long id, UserDTO userDTO);
 }
