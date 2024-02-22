@@ -14,10 +14,12 @@ import org.springframework.web.client.RestClientException;
 public class AssetsServiceImpl implements AssetsService {
 
     private static final String ASSET_URL;
+    private static final String ASSIGN_URL;
     private static final RestClient restClient;
 
     static {
         ASSET_URL = "http://localhost:8080/api/v1/assets";
+        ASSIGN_URL = "%s/assign".formatted(ASSET_URL);
         restClient = RestClientSingleton.getInstance();
     }
 
@@ -30,6 +32,26 @@ public class AssetsServiceImpl implements AssetsService {
                     log.error("Error: status {} getting asset by assetId: {}", response.getStatusCode(), assetId);
                     throw new RestClientException("Error: status " + response.getStatusCode() + " getting asset by assetId: " + assetId);
                 })
+                .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
+                    log.error("Error: status {} getting asset by assetId: {}", response.getStatusCode(), assetId);
+                    throw new RestClientException("Error: status " + response.getStatusCode() + " getting asset by assetId: " + assetId);
+                })
                 .body(AssetDTO.class);
+    }
+
+    @Override
+    public void updateAssetToAssigned(Long assetId) {
+        restClient.patch()
+                .uri("%s/%d".formatted(ASSIGN_URL, assetId))
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    log.error("Error: status {} updating asset to assigned: {}", response.getStatusCode(), assetId);
+                    throw new RestClientException("Error: status " + response.getStatusCode() + " updating asset to assigned: " + assetId);
+                })
+                .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
+                    log.error("Error: status {} updating asset to assigned: {}", response.getStatusCode(), assetId);
+                    throw new RestClientException("Error: status " + response.getStatusCode() + " updating asset to assigned: " + assetId);
+                })
+        ;
     }
 }

@@ -16,7 +16,7 @@ public class UsersServiceImpl implements UsersService {
     private static final RestClient restClient;
 
     static {
-        USER_URL = "http://localhost:8081/api/v1/users";
+        USER_URL = "http://localhost:8080/api/v1/users";
         restClient = RestClientSingleton.getInstance();
     }
 

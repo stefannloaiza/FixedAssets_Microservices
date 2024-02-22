@@ -6,7 +6,9 @@ import com.perficient.fixedassets.assignmentmicroservice.application.usecase.Ass
 import com.perficient.fixedassets.assignmentmicroservice.application.validations.AssignmentValidations;
 import com.perficient.fixedassets.assignmentmicroservice.domain.entity.Assignments;
 import com.perficient.fixedassets.assignmentmicroservice.domain.mapper.AssignmentMapper;
+import com.perficient.fixedassets.assignmentmicroservice.domain.models.dto.AssetDTO;
 import com.perficient.fixedassets.assignmentmicroservice.domain.models.dto.AssignmentDTO;
+import com.perficient.fixedassets.assignmentmicroservice.domain.models.enums.Status;
 import com.perficient.fixedassets.assignmentmicroservice.domain.models.response.AssignmentResponse;
 import com.perficient.fixedassets.assignmentmicroservice.domain.models.response.ErrorResponse;
 import com.perficient.fixedassets.assignmentmicroservice.domain.repository.AssignmentRepository;
@@ -47,8 +49,12 @@ public class AssignmentUseCaseImpl implements AssignmentUseCase {
             return ResponseEntity.badRequest().body(new AssignmentResponse("Assignment validation failed", errorsResponseList));
         }
 
-        Assignments save = assignmentRepository.save(assignment);
-        log.info("Assignment created: {}", save);
+        assignment = assignmentRepository.save(assignment);
+        log.info("Assignment created: {}", assignment);
+
+        updateAsset(assignment.getAssetId());
+        log.info("Asset updated: {}", assignment.getAssetId());
+
         return ResponseEntity.ok(new AssignmentResponse("Assignment created successfully", null));
     }
 
@@ -67,6 +73,8 @@ public class AssignmentUseCaseImpl implements AssignmentUseCase {
 
         Assignments update = assignmentRepository.save(assignment);
         log.info("Assignment updated: {}", update);
+
+
         return ResponseEntity.ok(new AssignmentResponse("Assignment updated successfully", null));
     }
 
@@ -77,8 +85,13 @@ public class AssignmentUseCaseImpl implements AssignmentUseCase {
 
     private void checkIfExistAsset(Assignments assignment, List<ErrorResponse> errorsResponseList) {
         try {
-            if (Objects.equals(assetsService.getAssetByAssetId(assignment.getAssetId()), null)) {
+            AssetDTO assetDTO = assetsService.getAssetByAssetId(assignment.getAssetId());
+            if (Objects.isNull(assetDTO)) {
                 errorsResponseList.add(new ErrorResponse("Asset is not found", HttpStatus.NOT_FOUND));
+                return;
+            }
+            if (assetDTO.assignmentStatus().equals(Status.ASSIGNED)) {
+                errorsResponseList.add(new ErrorResponse("Asset is already assigned", HttpStatus.BAD_REQUEST));
             }
         } catch (RestClientException e) {
             errorsResponseList.add(new ErrorResponse(e.getMessage(), HttpStatus.FAILED_DEPENDENCY));
@@ -93,5 +106,9 @@ public class AssignmentUseCaseImpl implements AssignmentUseCase {
         } catch (RestClientException e) {
             errorsResponseList.add(new ErrorResponse(e.getMessage(), HttpStatus.FAILED_DEPENDENCY));
         }
+    }
+
+    private void updateAsset(Long assetId) {
+        assetsService.updateAssetToAssigned(assetId);
     }
 }

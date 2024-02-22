@@ -51,4 +51,10 @@ public class AssetController {
     public ResponseEntity<AssetResponse> updateAsset(@PathVariable Long id, @RequestBody AssetDTO assetDTO) {
         return assetUseCase.updateAsset(id, assetDTO);
     }
+
+    @PatchMapping("/assign/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<AssetResponse> assignAsset(@PathVariable Long id) {
+        return assetUseCase.assignAsset(id);
+    }
 }

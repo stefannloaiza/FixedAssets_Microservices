@@ -4,4 +4,6 @@ import com.perficient.fixedassets.assignmentmicroservice.domain.models.dto.Asset
 
 public interface AssetsService {
     AssetDTO getAssetByAssetId(Long assetId);
+
+    void updateAssetToAssigned(Long assetId);
 }
