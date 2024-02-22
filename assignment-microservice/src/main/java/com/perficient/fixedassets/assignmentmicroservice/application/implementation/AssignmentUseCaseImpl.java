@@ -109,6 +109,6 @@ public class AssignmentUseCaseImpl implements AssignmentUseCase {
     }
 
     private void updateAsset(Long assetId) {
-        assetsService.updateAssetToAssigned(assetId);
+        assetsService.sendStatusAssignedEvent(assetId);
     }
 }
