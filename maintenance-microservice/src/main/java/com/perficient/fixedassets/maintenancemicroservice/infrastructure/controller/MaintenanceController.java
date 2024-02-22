@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/maintenance")
 @RequiredArgsConstructor
@@ -26,7 +24,7 @@ public class MaintenanceController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<MaintenanceDTO>> getAll() {
+    public ResponseEntity<Iterable<MaintenanceDTO>> getAll() {
         return ResponseEntity.ok(maintenanceUseCase.getAll());
     }
 
@@ -38,7 +36,7 @@ public class MaintenanceController {
 
     @GetMapping("/asset/{assetId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<MaintenanceDTO>> getByAssetId(@PathVariable Long assetId) {
+    public ResponseEntity<Iterable<MaintenanceDTO>> getByAssetId(@PathVariable Long assetId) {
         return ResponseEntity.ok(maintenanceUseCase.getByAssetId(assetId));
     }
 

@@ -50,8 +50,8 @@ public class MaintenanceUseCaseImpl implements MaintenanceUseCase {
             return ResponseEntity.badRequest().body(new MaintenanceResponse("Asset not found", null));
         }
 
-        Maintenance newMaintenance = maintenanceRepository.save(maintenance);
-        log.info("Maintenance created: {}", newMaintenance);
+        maintenance = maintenanceRepository.save(maintenance);
+        log.info("Maintenance created: {}", maintenance);
         return ResponseEntity.ok(new MaintenanceResponse("Maintenance created successfully", null));
     }
 
