@@ -15,4 +15,6 @@ public interface AssetUseCase {
     ResponseEntity<AssetResponse> createAsset(AssetDTO assetDTO);
 
     ResponseEntity<AssetResponse> updateAsset(Long id, AssetDTO assetDTO);
+
+    ResponseEntity<AssetResponse> assignAsset(Long id);
 }

@@ -5,6 +5,7 @@ import com.perficient.fixedassets.assetsmicroservice.application.validations.Ass
 import com.perficient.fixedassets.assetsmicroservice.domain.entity.Asset;
 import com.perficient.fixedassets.assetsmicroservice.domain.mapper.AssetMapper;
 import com.perficient.fixedassets.assetsmicroservice.domain.models.dto.AssetDTO;
+import com.perficient.fixedassets.assetsmicroservice.domain.models.enums.Status;
 import com.perficient.fixedassets.assetsmicroservice.domain.models.response.AssetResponse;
 import com.perficient.fixedassets.assetsmicroservice.domain.models.response.ErrorResponse;
 import com.perficient.fixedassets.assetsmicroservice.domain.repository.AssetRepository;
@@ -74,6 +75,19 @@ public class AssetUseCaseImpl implements AssetUseCase {
         updated = assetRepository.save(updated);
         log.info("Asset updated: {}", updated);
         return ResponseEntity.ok(new AssetResponse("Asset updated successfully", null));
+    }
+
+    @Override
+    public ResponseEntity<AssetResponse> assignAsset(Long id) {
+        Asset asset = assetRepository.findById(id);
+        if (Objects.isNull(asset)) {
+            log.error("Asset not found: {}", id);
+            return ResponseEntity.badRequest().body(new AssetResponse("Asset not found", null));
+        }
+        asset.setAssignmentStatus(Status.ASSIGNED);
+        asset = assetRepository.save(asset);
+        log.info("Asset assigned: {}", asset);
+        return ResponseEntity.ok(new AssetResponse("Asset assigned successfully", null));
     }
 
 
